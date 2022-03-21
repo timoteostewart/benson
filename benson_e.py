@@ -6,12 +6,14 @@ import pathlib
 import os
 import re
 import trafilatura
-import hashlib
-import yaml
 import datetime
 
 import my_time
 import db
+import url_utils
+import text_utils
+import config
+
 
 # keywords: content extraction, boilerplate removal
 
@@ -28,14 +30,10 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 
 
-with open("settings.yaml", "r", encoding="utf-8") as f:
-    settings = yaml.safe_load(f)
-
-
 # other initial setup
 required_directories = []
-required_directories.append(settings["OUTPUT_DIR_TEXT_FILES"])
-required_directories.append(settings["OUTPUT_DIR_MP3_FILES"])
+required_directories.append(config.settings["OUTPUT_DIR_TEXT_FILES"])
+required_directories.append(config.settings["OUTPUT_DIR_MP3_FILES"])
 for each_dir in required_directories:
     if not os.path.isdir(pathlib.Path(each_dir)):
         os.makedirs(pathlib.Path(each_dir))
@@ -66,159 +64,6 @@ def get_content(orig_url):  # uses trafilatura
         return None
 
     return result
-
-
-def tokenize_string(string):
-    tokens = []
-    cur_token = ""
-
-    for char in string:
-        if char in settings["ALLOWED_AN_CHARS"]:
-            cur_token += char
-        else:
-            if cur_token:
-                tokens.append(cur_token)
-                cur_token = ""
-            else:
-                pass
-    if cur_token:
-        tokens.append(cur_token)
-    return tokens
-
-
-def trim_url(url):
-    # remove scheme
-    if url.startswith("http"):
-        iodfs = url.index("//")
-        url = url[(iodfs + 2) :]
-    # remove "www[\d]?" subdomain
-    if url.startswith("www."):
-        url = url[4:]
-    elif url.startswith("www") and url[3:4].isnumeric() and url[4:5] == ".":
-        url = url[5:]
-    # remove "en" subdomain
-    if url.startswith("en."):
-        url = url[3:]
-    return url
-
-
-def tokenize_url(url):
-    url = trim_url(url)
-    return tokenize_string(url)
-
-
-def get_base_filename(url):
-    tokens = tokenize_url(url)
-    md5 = hashlib.md5(url.encode("utf-8")).hexdigest()
-    tokens.append(md5)
-    base_filename = "-".join(tokens)
-    return base_filename
-
-
-def get_domains(url: str):
-    url = trim_url(url)
-
-    try:  # remove path symbol (i.e., forward slash) and remainder of string
-        iofs = url.index("/")
-        url = url[:iofs]
-    except:
-        pass
-
-    try:  # remove percent-encoded path symbol (i.e., forward slash) and remainder of string
-        iofs = url.index("%2F")
-        url = url[:iofs]
-    except:
-        pass
-
-    try:  # remove query marker (i.e., question mark) and remainder of string
-        ioqm = url.index("?")
-        url = url[:ioqm]
-    except:
-        pass
-
-    try:  # remove percent-encoded query marker (i.e., question mark) and remainder of string
-        iofs = url.index("%3F")
-        url = url[:iofs]
-    except:
-        pass
-
-    try:  # remove port number symbol and remainder of string
-        ioc = url.index(":")
-        url = url[:ioc]
-    except:
-        pass
-
-    domains = url
-    return domains
-
-
-def trim_path_tokens(path_as_tokens):
-    # discard leading tokens likely to be irrelevant
-    while path_as_tokens and path_as_tokens[0] in settings["IRRELEVANT_FIRST_TOKENS"]:
-        path_as_tokens.pop(0)
-
-    int_min5 = re.compile(r"\b\d{5,}\b")
-    date_string = re.compile(r"\b20\d\d\d\d\d\d\b")
-
-    int_4exact = re.compile(r"\b\d{4}\b")
-    second_millennium = re.compile(r"\b1[0-9]\d\d\b")
-    year_2000s_2010s = re.compile(r"\b20[01]\d\b")
-    year_2020s = re.compile(r"\b202[012]\b")
-
-    hex_string_min4 = re.compile(r"\b[a-f0-9]{4,}\b")
-    all_digits = re.compile(r"\b\d+\b")
-    all_letters = re.compile(r"\b[a-z]+\b")
-
-    alphanumeric_str_min8 = re.compile(r"\b[a-z0-9]{8,}\b")
-
-    # discard final tokens likely to be irrelevant
-    while path_as_tokens and (
-        (path_as_tokens[len(path_as_tokens) - 1] in settings["IRRELEVANT_LAST_TOKENS"])
-        or (
-            int_4exact.match(path_as_tokens[len(path_as_tokens) - 1])
-            and not date_string.match(path_as_tokens[len(path_as_tokens) - 1])
-            and not year_2020s.match(path_as_tokens[len(path_as_tokens) - 1])
-            and not year_2000s_2010s.match(path_as_tokens[len(path_as_tokens) - 1])
-            and not second_millennium.match(path_as_tokens[len(path_as_tokens) - 1])
-        )
-        or (
-            int_min5.match(path_as_tokens[len(path_as_tokens) - 1])
-            and not date_string.match(path_as_tokens[len(path_as_tokens) - 1])
-        )
-        or (
-            hex_string_min4.match(path_as_tokens[len(path_as_tokens) - 1])
-            and not all_digits.match(path_as_tokens[len(path_as_tokens) - 1])
-            and not all_letters.match(path_as_tokens[len(path_as_tokens) - 1])
-        )
-        or (
-            alphanumeric_str_min8.match(path_as_tokens[len(path_as_tokens) - 1])
-            and not all_digits.match(path_as_tokens[len(path_as_tokens) - 1])
-            and not all_letters.match(path_as_tokens[len(path_as_tokens) - 1])
-        )
-    ):
-        # logger.info(f"deleting: {path_as_tokens[len(path_as_tokens) - 1]}")
-        path_as_tokens.pop(len(path_as_tokens) - 1)
-
-    new_path_as_tokens = []
-    for token in path_as_tokens:
-        if token not in settings["IRRELEVANT_TOKENS"]:
-            new_path_as_tokens.append(token)
-
-    if new_path_as_tokens:
-        return new_path_as_tokens
-    else:
-        return []
-
-
-def get_path_of_url(url, domains):
-    iop = url.index(domains) + len(domains)
-    path_as_str = url[iop:]
-    if not path_as_str:
-        return ""
-    elif path_as_str.startswith("/"):
-        return path_as_str[1:]
-    else:
-        return path_as_str
 
 
 def get_spoken_title(domains, path_as_tokens):
@@ -397,10 +242,7 @@ if __name__ == "__main__":
         else:
             output_dir = output_dir_str
     else:
-        output_dir = settings["OUTPUT_DIR_MP3_FILES"]
-
-    # print(f"{source} {output_dir} {domains_pron}")
-    # exit()
+        output_dir = config.settings["OUTPUT_DIR_MP3_FILES"]
 
     # initialize timing variables
     start_ts = my_time.get_time_now_in_seconds()
@@ -482,8 +324,6 @@ if __name__ == "__main__":
         # if mp3_count == 3:
         #     break
 
-        # print(cur_link_entry)
-
         if cur_link_entry[0]:
             row_id = int(cur_link_entry[0])
         else:
@@ -495,14 +335,14 @@ if __name__ == "__main__":
         date_emailed = cur_link_entry[2]
         # date_loaded = cur_link_entry[3]
 
-        domains = get_domains(url)
+        domains = url_utils.get_domains(url)
         if domains in domains_pronunciations:
             domains_pron = domains_pronunciations[domains]
         else:
             domains_pron = get_domains_pron(domains)
 
-        path = get_path_of_url(url, domains)
-        path_as_tokens = trim_path_tokens(tokenize_string(path))
+        path = url_utils.get_path_of_url(url, domains)
+        path_as_tokens = url_utils.trim_path_tokens(text_utils.tokenize_string(path))
         spoken_title = get_spoken_title(domains, path_as_tokens)
 
         if date_emailed:
@@ -519,8 +359,8 @@ if __name__ == "__main__":
             f"It was digitized to audio on {my_time.pretty_date(datetime.datetime.now())}.\n\n"
         )
 
-        txt_filename = f"{get_base_filename(url)}.txt"
-        mp3_filename = f"{get_base_filename(url)}.mp3"
+        txt_filename = f"{text_utils.get_base_filename(url)}.txt"
+        mp3_filename = f"{text_utils.get_base_filename(url)}.mp3"
 
         story_content = get_content(orig_url)
 
@@ -534,11 +374,10 @@ if __name__ == "__main__":
             problem_count += 1
             continue
 
+        mp3_full_path = os.path.join(output_dir, mp3_filename)
+
         try:
-            engine.save_to_file(
-                (intro_script + story_content),
-                os.path.join(settings["OUTPUT_DIR_MP3_FILES"], mp3_filename),
-            )
+            engine.save_to_file((intro_script + story_content), mp3_full_path)
             engine.runAndWait()
         except Exception as e:
             error = f"error while converting to mp3 file: {e}"
@@ -552,8 +391,9 @@ if __name__ == "__main__":
             db.mark_row_as_egressed_in_benson(row_id)
 
         mp3_count += 1
+
         mp3_duration_in_s += float(
-            ffmpeg.probe(os.path.join(settings["OUTPUT_DIR_MP3_FILES"], mp3_filename))[
+            ffmpeg.probe(os.path.join(output_dir, mp3_filename))[
                 "format"
             ]["duration"]
         )
@@ -565,7 +405,7 @@ if __name__ == "__main__":
     egression_duration_in_s = end_ts - start_ts
 
     post_size_in_bytes = 0
-    for f in os.scandir(settings["OUTPUT_DIR_MP3_FILES"]):
+    for f in os.scandir(output_dir):
         post_size_in_bytes += os.path.getsize(f)
 
     size_delta_in_bytes = post_size_in_bytes - pre_size_in_bytes
