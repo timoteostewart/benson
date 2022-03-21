@@ -1,3 +1,4 @@
+import ffmpeg
 import argparse
 import pyttsx3
 import logging
@@ -471,10 +472,11 @@ if __name__ == "__main__":
             logger.info(f"no domains pronunciation file specified and no default found")
 
     # measure size of target dir, so we can measure the size of created mp3s
-    pre_size = 0
+    pre_size_in_bytes = 0
     for f in os.scandir(output_dir):
-        pre_size += os.path.getsize(f)
+        pre_size_in_bytes += os.path.getsize(f)
     mp3_count = 0
+    mp3_duration_in_s = 0.0
     problem_count = 0
 
     for cur_link_entry in link_entries:
@@ -527,7 +529,8 @@ if __name__ == "__main__":
         if not story_content:
             error = f"error getting content from url {url}"
             logger.error(error)
-            db.mark_row_as_egression_error_in_benson(error)
+            if row_id > 0:
+                db.mark_row_as_egression_error_in_benson(row_id, "error getting content from url")  # no need to repeat URL in database
             problem_count += 1
             continue
 
@@ -549,36 +552,39 @@ if __name__ == "__main__":
             db.mark_row_as_egressed_in_benson(row_id)
 
         mp3_count += 1
+        mp3_duration_in_s += float(ffmpeg.probe(os.path.join(settings["OUTPUT_DIR_MP3_FILES"], mp3_filename))['format']['duration'])
 
     # compute statistics
     end_ts = my_time.get_time_now_in_seconds()
     end_dt = my_time.get_cur_datetime()
 
-    duration = end_ts - start_ts
+    egression_duration_in_s = end_ts - start_ts
 
-    post_size = 0
+    post_size_in_bytes = 0
     for f in os.scandir(settings["OUTPUT_DIR_MP3_FILES"]):
-        post_size += os.path.getsize(f)
+        post_size_in_bytes += os.path.getsize(f)
 
-    size_delta = post_size - pre_size
+    size_delta_in_bytes = post_size_in_bytes - pre_size_in_bytes
     units = ["B", "KB", "MB", "GB"]
     unit_index = 0
+    size_delta = size_delta_in_bytes
     while size_delta > 1_000:
         size_delta /= 1_000.0
         unit_index += 1
 
-    # TODO: also mention hours of audio produced and minutes per megabyte
     # TODO: provide a dynamic "time taken and time left" progress indicator
     # TODO: if article isn't available, then try archive.is and Wayback Machine, check available snapshots starting with most recent
     # TODO: for domains not in a pronunciations file, check website and try to determine sayable name of website. check tags with keywords like title, by, byline, site, site_name, site-name, description, meta, etc. and compare strings with spaces to the closed-up strings in the domain name. e.g., avanwyk would be Andrich van Wyk
 
     print(
         "\nSummary:\n"
-        f"source:       {source[0]}\n"
-        f"start time:   {start_dt}\n"
-        f"end time:     {end_dt}\n"
-        f"time taken:   {my_time.pretty_print_duration(duration)}\n"
-        f"mp3s made:    {mp3_count}\n"
-        f"size of mp3s: {round(size_delta, 2)} {units[unit_index]}\n"
-        f"problem URLs: {problem_count}\n"
+        f"source:        {source[0]}\n"
+        f"start time:    {start_dt}\n"
+        f"end time:      {end_dt}\n"
+        f"time taken:    {my_time.pretty_print_duration(egression_duration_in_s)}\n"
+        f"mp3s count:    {mp3_count - problem_count}\n"
+        f"mp3s size:     {round(size_delta, 2)} {units[unit_index]}\n"
+        f"mp3s duration: {my_time.pretty_print_duration(mp3_duration_in_s)}\n"
+        f"mp3s dur/MB:   {my_time.pretty_print_duration(mp3_duration_in_s / (size_delta_in_bytes / 1_000_000))}\n"
+        f"problem URLs:  {problem_count}\n"
     )
