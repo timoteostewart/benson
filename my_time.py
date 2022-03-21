@@ -28,7 +28,7 @@ def pretty_print_duration(num_seconds):
 
     m, s = divmod(num_seconds, 60)
     h, m = divmod(m, 60)
-    
+
     if h == 0:
         slug = f"{m:02d}m:{s:02d}s"
     elif h < 10:
@@ -37,7 +37,7 @@ def pretty_print_duration(num_seconds):
         slug = f"{h:02d}h:{m:02d}m:{s:02d}s"
     else:
         slug = f"{h}h:{m:02d}m:{s:02d}s"
-    
+
     return slug
 
 

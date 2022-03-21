@@ -4,8 +4,6 @@ import pyttsx3
 import logging
 import pathlib
 import os
-import sys
-
 import re
 import trafilatura
 import hashlib
@@ -530,7 +528,9 @@ if __name__ == "__main__":
             error = f"error getting content from url {url}"
             logger.error(error)
             if row_id > 0:
-                db.mark_row_as_egression_error_in_benson(row_id, "error getting content from url")  # no need to repeat URL in database
+                db.mark_row_as_egression_error_in_benson(
+                    row_id, "error getting content from url"
+                )  # no need to repeat URL in database
             problem_count += 1
             continue
 
@@ -552,7 +552,11 @@ if __name__ == "__main__":
             db.mark_row_as_egressed_in_benson(row_id)
 
         mp3_count += 1
-        mp3_duration_in_s += float(ffmpeg.probe(os.path.join(settings["OUTPUT_DIR_MP3_FILES"], mp3_filename))['format']['duration'])
+        mp3_duration_in_s += float(
+            ffmpeg.probe(os.path.join(settings["OUTPUT_DIR_MP3_FILES"], mp3_filename))[
+                "format"
+            ]["duration"]
+        )
 
     # compute statistics
     end_ts = my_time.get_time_now_in_seconds()
