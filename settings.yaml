@@ -1,0 +1,14 @@
+
+ALLOWED_AN_CHARS: "abcdefghijklmnopqrstuvwxyz0123456789"
+
+IRRELEVANT_FIRST_TOKENS: ['article', 'articles', 'archive', 'blog', 'en', 'p', 'post', 'posts', 'news', 'story', 'stories', 'wiki', 'wp']
+
+IRRELEVANT_LAST_TOKENS: ['htm', 'html', 'php']
+
+IRRELEVANT_TOKENS: ['fbclid']
+
+OUTPUT_DIR_TEXT_FILES: L:\Dropbox\proj\benson_egresser\text_files
+
+OUTPUT_DIR_MP3_FILES: L:\Dropbox\proj\benson_egresser\mp3_files
+
+

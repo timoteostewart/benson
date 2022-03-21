@@ -1,0 +1,81 @@
+avanwyk.com A. Van Wyk
+alexanderobenauer.com   Alexander O. Benauer
+antigonejournal.com Antigone Journal
+arstechnica.com Ars Technica
+astralcodexten.substack.com Astral Codex Ten on Substack
+atlasobscura.com    Atlas Obscura
+baldurbjarnason.com Baldur Bjarnason
+bleepingcomputer.com    Bleeping Computer
+bloomberg.com   Bloomberg
+bookriot.com    Book Riot
+businessinsider.com Business Insider
+cdagostino.io   C. D'Agostino
+christianitytoday.com   Christianity Today
+cyclingtips.com Cycling Tips
+damninteresting.com Damn Interesting
+danluu.com  Dan Luu
+discovermagazine.com    Discover Magazine
+npr.org en pee are
+fastcompany.com Fast Company
+hackernoon.com  Hacker Noon
+historytoday.com    History Today
+jeffgeerling.com    Jeff Geerling dot com
+kylechayka.substack.com Kyle Chayka on Substack
+laphamsquarterly.org    Laphams Quarterly
+letterstoanewdeveloper.com  Letters to a New Developer
+lithub.com  Lit Hub
+longreads.com   Long Reads
+martinfowler.com    Martin Fowler
+motherjones.com Mother Jones
+m.nautil.us Nautilus
+newatlas.com    New Atlas
+nybooks.com New York books
+nymag.com   New York Magazine
+norvig.com  Norvig dot com
+noteflakes.com  Note Flakes
+os2museum.com   oh ess two museum
+openculture.com Open Culture
+paulgraham.com  Paul Graham dot com
+prospectmagazine.co.uk  Prospect Magazine
+psychologytoday.com Psychology Today
+quantamagazine.org  Quanta Magazine
+rachelbythebay.com  Rachel by the Bay dot com
+relevantmagazine.com    Relevant Magazine
+sfgate.com  San Francisco Gate
+scientificamerican.com  Scientific American
+scottaaronson.blog  Scott Aaronson
+scrapingbee.com Scraping Bee
+cnn.com sea en en
+simplethread.com    Simple Thread
+smithsonianmag.com  Smithsonian Magazine
+spectrum.ieee.org   Spectrum eye triple ee
+stackoverflow.blog  Stack Overflow Blog
+taskandpurpose.com  Task and Purpose
+techradar.com   Tech Radar
+texasmonthly.com    Texas Monthly
+theatlantic.com The Atlantic
+bbc.com The bee bee sea
+economist.com   The Economist
+ft.com  The Financial Times
+theguardian.com The Guardian
+thehustle.co    The Hustle
+thelondonmagazine.org   The London Magazine
+lrb.co.uk   The London Review of Books
+lareviewofbooks.org The Los Angeles Review of Books
+latimes.com The Los Angeles Times
+nytimes.com The New York Times
+newyorker.com   The New Yorker
+theregister.com The Register
+seattletimes.com    The Seattle Times
+spectator.co.uk The Spectator
+the-tls.co.uk   The Times Literary Supplement
+theverge.com    The Verge
+wsj.com The Wall Street Journal
+thewalrus.ca    The Walrus
+washingtonpost.com  The Washington Post
+travelstatsman.com  Travel Statsman
+vanityfair.com  Vanity Fair
+wikipedia.org   Wikipedia
+wired.com   Wired Magazine
+wired.co.uk Wired you kay
+zdnet.com   zee dee net
