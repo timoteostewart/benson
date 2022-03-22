@@ -28,21 +28,20 @@ def get_spoken_title(domains, path_as_tokens):
     possible_pub_dates = []
 
     for i, v in enumerate(path_as_tokens):
-        if this_millennium.match(v) or last_millennium.match(v):
+        
+        if this_millennium.match(v) or last_millennium.match(v):  # maybe a year
             candidate_pub_year = int(path_as_tokens[i])
             # look one ahead
             if (i + 1) < len(path_as_tokens) and a_month.match(path_as_tokens[i + 1]):
-                candidate_pub_month = int(path_as_tokens[i + 1])
-                # maybe a month and maybe a day
+                candidate_pub_month = int(path_as_tokens[i + 1])  # maybe a month
+                # look two ahead
                 if (i + 2) < len(path_as_tokens) and a_day.match(path_as_tokens[i + 2]):
-                    candidate_pub_day = int(path_as_tokens[i + 2])
+                    candidate_pub_day = int(path_as_tokens[i + 2])  # maybe a month and a day
                 else:
-                    # maybe a month, but not a day
-                    candidate_pub_day = None
+                    candidate_pub_day = None  # maybe a month, but not a day
                     pass
             else:
-                # maybe a year, but not a month or a day
-                candidate_pub_month = None
+                candidate_pub_month = None  # maybe a year, but not a month or a day
                 candidate_pub_day = None
                 pass
         else:
