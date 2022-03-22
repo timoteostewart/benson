@@ -14,7 +14,7 @@ import tts
 import url_utils
 
 
-# keywords: content extraction, boilerplate removal
+# keywords: content extraction, boilerplate removal, text-to-speech, web scraping
 
 # setup logger
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ def get_content(orig_url):  # uses trafilatura
     try:
         result = trafilatura.extract(
             downloaded, include_comments=False
-        )  # outputs main content and comments as plain text
+        )
     except Exception as e:
         print(f"trafilatura error extracting content from url {orig_url}: {e}")
         return None
