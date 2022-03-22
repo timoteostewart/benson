@@ -1,6 +1,5 @@
 from time import time
 
-
 import time
 import datetime
 import pytz
@@ -23,12 +22,10 @@ def get_sql_timestamp_now():
 
 
 def pretty_print_duration(num_seconds):
-
     num_seconds = int(num_seconds)
-
+    
     m, s = divmod(num_seconds, 60)
     h, m = divmod(m, 60)
-
     if h == 0:
         slug = f"{m:02d}m:{s:02d}s"
     elif h < 10:
