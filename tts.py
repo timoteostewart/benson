@@ -5,10 +5,10 @@ import my_time
 
 # initialize and configure TTS processor
 engine = pyttsx3.init()
-engine.setProperty(
-    "voice",
-    "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0",
-)
+# engine.setProperty(  # commented this out to be non-Windows friendly
+#     "voice",
+#     "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_DAVID_11.0",
+# )
 
 
 def get_spoken_title(domains, path_as_tokens):

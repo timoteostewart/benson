@@ -1,17 +1,17 @@
-import ffmpeg
 import argparse
-import logging
-import pathlib
-import os
-import trafilatura
 import datetime
+import ffmpeg
+import logging
+import os
+import pathlib
+import trafilatura
 
-import my_time
-import db
-import url_utils
-import text_utils
 import config
+import db
+import my_time
+import text_utils
 import tts
+import url_utils
 
 
 # keywords: content extraction, boilerplate removal
