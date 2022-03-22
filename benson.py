@@ -167,13 +167,15 @@ if __name__ == "__main__":
     pre_size_in_bytes = 0
     for f in os.scandir(output_dir):
         pre_size_in_bytes += os.path.getsize(f)
+    
+    # initialize other stats we'll track
     mp3_count = 0
     mp3_duration_in_s = 0.0
     problem_count = 0
 
     for cur_link_entry in link_entries:
 
-        # if mp3_count == 3:  # a rate limited during debugging
+        # if mp3_count == 3:  # a rate limiter for during debugging
         #     break
 
         if cur_link_entry[0]:
@@ -185,7 +187,7 @@ if __name__ == "__main__":
         url = orig_url.lower()
 
         date_emailed = cur_link_entry[2]
-        # date_loaded = cur_link_entry[3]
+        # date_loaded = cur_link_entry[3]  # this column is in my database, but it doesn't get used
 
         domains = url_utils.get_domains(url)
         if domains in domains_pronunciations:
@@ -211,7 +213,6 @@ if __name__ == "__main__":
             f"It was digitized to audio on {my_time.pretty_date(datetime.datetime.now())}.\n\n"
         )
 
-        txt_filename = f"{text_utils.get_base_filename(url)}.txt"
         mp3_filename = f"{text_utils.get_base_filename(url)}.mp3"
 
         story_content = get_content(orig_url)
@@ -222,7 +223,7 @@ if __name__ == "__main__":
             if row_id > 0:
                 db.mark_row_as_processing_error_in_db(
                     row_id, "error getting content from url"
-                )  # no need to repeat URL in database
+                )
             problem_count += 1
             continue
 
@@ -239,19 +240,18 @@ if __name__ == "__main__":
             continue
 
         # presumably success by this point
-        if row_id > 0:
-            db.mark_row_as_processed_in_db(row_id)
-
         mp3_count += 1
-
         mp3_duration_in_s += float(
             ffmpeg.probe(os.path.join(output_dir, mp3_filename))["format"]["duration"]
         )
 
-    # compute statistics
+        if row_id > 0:  # write back success to database, if applicable
+            db.mark_row_as_processed_in_db(row_id)
+
+
+    # tally statistics
     end_ts = my_time.get_time_now_in_seconds()
     end_dt = my_time.get_cur_datetime()
-
     processing_duration_in_s = end_ts - start_ts
 
     post_size_in_bytes = 0
