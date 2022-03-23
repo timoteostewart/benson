@@ -220,7 +220,7 @@ if __name__ == "__main__":
         if not story_content:
             error = f"error getting content from url {url}"
             logger.error(error)
-            if row_id > 0:
+            if source_str.lower() == "database":
                 db.mark_row_as_processing_error_in_db(
                     row_id, "error getting content from url"
                 )
@@ -235,7 +235,8 @@ if __name__ == "__main__":
         except Exception as e:
             error = f"error while converting to mp3 file: {e}"
             logger.error(error)
-            db.mark_row_as_processing_error_in_db(error)
+            if source_str.lower() == "database":
+                db.mark_row_as_processing_error_in_db(error)
             problem_count += 1
             continue
 
@@ -245,7 +246,7 @@ if __name__ == "__main__":
             ffmpeg.probe(os.path.join(output_dir, mp3_filename))["format"]["duration"]
         )
 
-        if row_id > 0:  # write back success to database, if applicable
+        if source_str.lower() == "database":
             db.mark_row_as_processed_in_db(row_id)
 
 
