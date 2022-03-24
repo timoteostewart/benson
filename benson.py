@@ -37,9 +37,7 @@ def get_content(orig_url):  # uses trafilatura
         return None
 
     try:
-        result = trafilatura.extract(
-            downloaded, include_comments=False
-        )
+        result = trafilatura.extract(downloaded, include_comments=False)
     except Exception as e:
         print(f"trafilatura error extracting content from url {orig_url}: {e}")
         return None
@@ -83,11 +81,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     source = args.source
-    output_dir = args.output_dir
     domains_pron = args.domains_pron
 
-    if output_dir:
-        output_dir_str = str(output_dir[0])
+    if args.output_dir:
+        output_dir_str = str(args.output_dir[0])
         if not os.path.isdir(pathlib.Path(output_dir_str)):
             logger.error(f"directory {output_dir_str} not found! aborting")
             exit(1)
@@ -167,7 +164,7 @@ if __name__ == "__main__":
     pre_size_in_bytes = 0
     for f in os.scandir(output_dir):
         pre_size_in_bytes += os.path.getsize(f)
-    
+
     # initialize other stats we'll track
     mp3_count = 0
     mp3_duration_in_s = 0.0
@@ -248,7 +245,6 @@ if __name__ == "__main__":
 
         if source_str.lower() == "database":
             db.mark_row_as_processed_in_db(row_id)
-
 
     # tally statistics
     end_ts = my_time.get_time_now_in_seconds()

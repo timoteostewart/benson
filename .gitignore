@@ -4,7 +4,6 @@
 #
 #
 
-mp3_files/
 benson_env/
 benson.log
 secrets.yaml
