@@ -111,7 +111,8 @@ As you might've guessed, I picked the name Benson after the sarcastic yet affabl
    ```sh
    python benson.py --source test-urls.txt
    ```
-5. And of course customize `db.py` and `secrets.yaml` to pull from your database or wherever else you keep your URLs.
+5. Listen to the four mp3s in the ./mp3_files folder to hear how it sounds. (Of course `pyttsx3` offers plenty of ways to customize the voices.)
+
 <br>
 <br>
 
