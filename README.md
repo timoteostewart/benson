@@ -168,10 +168,6 @@ Tim Stewart - tim@texastim.dev
 
 Benson project link: [https://github.com/timoteostewart/benson](https://github.com/timoteostewart/benson)
 
-I'm currently looking for work as a software dev!
-Say hello on email or [LinkedIn](https://www.linkedin.com/in/texastimdev/)
-and let's talk about how I can help create solutions to the challenges you and your customers are facing.
-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
