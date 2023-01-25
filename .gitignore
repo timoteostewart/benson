@@ -1,19 +1,29 @@
-#
-#
-# project-specific stuff
-#
-#
 
-benson_env/
+.vscode/
 benson.log
+benson_env/
 secrets.yaml
 
+# ========================================
+# source: https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
+# date: 10-20-2022
 
-#
-#
-# gitignore/Python.gitignore
-#
-#
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+# ========================================
+# source: https://github.com/github/gitignore/blob/main/Python.gitignore
+# date: 10-20-2022
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -118,7 +128,15 @@ ipython_config.py
 #   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
 #poetry.lock
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+# pdm
+#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
+#pdm.lock
+#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
+#   in version control.
+#   https://pdm.fming.dev/#use-with-ide
+.pdm.toml
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
 
 # Celery stuff
@@ -167,75 +185,3 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
-
-
-
-#
-#
-# vscode-python/.gitignore
-#
-#
-
-.DS_Store
-.huskyrc.json
-out
-log.log
-**/node_modules
-*.pyc
-*.vsix
-**/.vscode/.ropeproject/**
-**/testFiles/**/.cache/**
-*.noseids
-.nyc_output
-.vscode-test
-__pycache__
-npm-debug.log
-**/.mypy_cache/**
-!yarn.lock
-coverage/
-cucumber-report.json
-**/.vscode-test/**
-**/.vscode test/**
-**/.vscode-smoke/**
-**/.venv*/
-port.txt
-precommit.hook
-pythonFiles/lib/**
-debug_coverage*/**
-languageServer/**
-languageServer.*/**
-bin/**
-obj/**
-.pytest_cache
-tmp/**
-.python-version
-.vs/
-test-results*.xml
-xunit-test-results.xml
-build/ci/performance/performance-results.json
-!build/
-debug*.log
-debugpy*.log
-pydevd*.log
-nodeLanguageServer/**
-nodeLanguageServer.*/**
-dist/**
-
-#
-#
-# gitignore/Global/VisualStudioCode.gitignore
-#
-#
-
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
-
-# Local History for Visual Studio Code
-.history/
-
-# Built Visual Studio Code Extensions
-*.vsix

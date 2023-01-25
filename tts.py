@@ -41,11 +41,9 @@ def get_spoken_title(domains, path_as_tokens):
                     )  # maybe a month and a day
                 else:
                     candidate_pub_day = None  # maybe a month, but not a day
-                    pass
             else:
                 candidate_pub_month = None  # maybe a year, but not a month or a day
                 candidate_pub_day = None
-                pass
         else:
             candidate_pub_year = None
 
